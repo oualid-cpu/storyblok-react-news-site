@@ -12,20 +12,16 @@ function App() {
     useEffect(() => {
         async function loadStory() {
             try {
+                setError('');
+                setStory(null);
+                setArticles([]);
+
                 const storyblokApi = getStoryblokApi();
 
-                //const path = window.location.pathname;
-                //const slug = path === '/' ? 'home' : path.replace('/', '');
-
-                const basePath = '/storyblok-react-news-site';
-
-                let path = window.location.pathname;
-
-                if (path.startsWith(basePath)) {
-                    path = path.slice(basePath.length);
-                }
-
-                const slug = path === '/' || path === '' ? 'home' : path.replace(/^\/|\/$/g, '');
+                const hashPath = window.location.hash.replace('#', '');
+                const slug = hashPath === '/' || hashPath === ''
+                    ? 'home'
+                    : hashPath.replace(/^\/|\/$/g, '');
 
                 const response = await storyblokApi.get(`cdn/stories/${slug}`, {
                     version: 'draft',
@@ -54,6 +50,12 @@ function App() {
         }
 
         loadStory();
+
+        window.addEventListener('hashchange', loadStory);
+
+        return () => {
+            window.removeEventListener('hashchange', loadStory);
+        };
     }, []);
 
     useEffect(() => {
@@ -116,7 +118,7 @@ function App() {
 
                                 {articles.map((article) => (
                                     <a
-                                        href={`/${article.slug}`}
+                                        href={`${import.meta.env.BASE_URL}#/${article.slug}`}
                                         className="article-card-link"
                                         key={article.id}
                                     >
