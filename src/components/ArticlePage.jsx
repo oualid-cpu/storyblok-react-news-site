@@ -1,4 +1,4 @@
-import { StoryblokComponent } from '@storyblok/react';
+import {  StoryblokRichText } from '@storyblok/react';
 
 function ArticlePage({ story }) {
     const content = story.content;
@@ -25,9 +25,9 @@ function ArticlePage({ story }) {
                 </p>
             )}
 
-            {content.body?.map((blok) => (
-                <StoryblokComponent blok={blok} key={blok._uid} />
-            ))}
+            {content.body && (
+                <StoryblokRichText doc={content.body} />
+            )}
         </article>
     );
 }
