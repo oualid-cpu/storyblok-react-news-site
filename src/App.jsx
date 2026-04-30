@@ -14,8 +14,18 @@ function App() {
             try {
                 const storyblokApi = getStoryblokApi();
 
-                const path = window.location.pathname;
-                const slug = path === '/' ? 'home' : path.replace('/', '');
+                //const path = window.location.pathname;
+                //const slug = path === '/' ? 'home' : path.replace('/', '');
+
+                const basePath = '/storyblok-react-news-site';
+
+                let path = window.location.pathname;
+
+                if (path.startsWith(basePath)) {
+                    path = path.slice(basePath.length);
+                }
+
+                const slug = path === '/' || path === '' ? 'home' : path.replace(/^\/|\/$/g, '');
 
                 const response = await storyblokApi.get(`cdn/stories/${slug}`, {
                     version: 'draft',
